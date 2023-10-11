@@ -1,5 +1,5 @@
-#include "dbconfig.h"
-#include "dbconnect.h"
+#include "header/dbconfig.h"
+#include "header/dbconnect.h"
 #include <QCoreApplication>
 #include <QHeaderView>
 #include <QTableWidgetItem>

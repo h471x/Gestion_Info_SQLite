@@ -1,8 +1,8 @@
-#include "loginwindow.h"
+#include "header/loginwindow.h"
 #include "ui_loginwindow.h"
-#include "mainwindow.h"
-#include "dbconnect.h"
-#include "dbconfig.h"
+#include "header/mainwindow.h"
+#include "header/dbconnect.h"
+#include "header/dbconfig.h"
 
 // Add a member variable to track login status
 bool isLoggedIn = false;

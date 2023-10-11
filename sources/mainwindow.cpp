@@ -1,7 +1,7 @@
-#include "mainwindow.h"
+#include "header/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "theme.h"
-#include "dbconfig.h"
+#include "header/theme.h"
+#include "header/dbconfig.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

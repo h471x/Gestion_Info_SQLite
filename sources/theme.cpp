@@ -1,4 +1,4 @@
-#include "theme.h"
+#include "header/theme.h"
 #include <QApplication>
 
 ThemeSwitcher::ThemeSwitcher(Ui::MainWindow* ui)

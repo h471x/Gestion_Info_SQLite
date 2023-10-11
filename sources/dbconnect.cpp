@@ -1,4 +1,4 @@
-#include "dbconnect.h"
+#include "header/dbconnect.h"
 #include <QCoreApplication>
 
 DatabaseConnection::DatabaseConnection()
