@@ -65,7 +65,12 @@ QToolTip{
 
 #Content QTreeView::item{background-color: #c5cad6;}
 #Content QTreeView::item:Alternate{background-color: #a2a6ae;}
-#Content QTreeView::item:Hover{background-color: #d4d8e2;}</string>
+#Content QTreeView::item:Hover{background-color: #d4d8e2;}
+
+#title{
+	font-size: 16pt;
+	font-weight: bold;
+}</string>
   </property>
   <property name="iconSize">
    <size>
@@ -449,7 +454,27 @@ QToolTip{
                    </property>
                    <property name="sizeHint" stdset="0">
                     <size>
-                     <width>1060</width>
+                     <width>310</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="title">
+                   <property name="text">
+                    <string>IT Inventory Management</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_2">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>309</width>
                      <height>20</height>
                     </size>
                    </property>
@@ -457,6 +482,9 @@ QToolTip{
                  </item>
                  <item>
                   <widget class="QPushButton" name="NotifBtn">
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
