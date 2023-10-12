@@ -25,6 +25,7 @@ void ThemeSwitcher::toggleTheme()
         ui->FlowsBtn->setIcon(QIcon(":/darkicon/icons/dark/location-arrow.512x512.png"));
         ui->OptionsBtn->setIcon(QIcon(":/darkicon/icons/dark/gear.512x512.png"));
         ui->HelpBtn->setIcon(QIcon(":/darkicon/icons/dark/question-circle.512x512.png"));
+        ui->NotifBtn->setIcon(QIcon(":/darkicon/icons/dark/bell.448x512.png"));
 
         isDark = false;
 
@@ -44,6 +45,7 @@ void ThemeSwitcher::toggleTheme()
         ui->FlowsBtn->setIcon(QIcon(":/icons/icons/location-arrow.512x512.png"));
         ui->OptionsBtn->setIcon(QIcon(":/icons/icons/gear.512x512.png"));
         ui->HelpBtn->setIcon(QIcon(":/icons/icons/question-circle.512x512.png"));
+        ui->NotifBtn->setIcon(QIcon(":/icons/icons/bell.448x512.png"));
 
         isDark = true;
     }
