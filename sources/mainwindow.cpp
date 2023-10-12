@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     if (dbManager->initializeDatabase()) {
         // Database initialization successful
         // Create the user table model and use it with your QTableWidget
+        // Insert the data PRODUCT in Mainui->tableWidget
         dbManager->createUserTableModel(Mainui->tableWidget);
     } else {
         // Handle the case where database initialization fails
