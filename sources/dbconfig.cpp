@@ -24,6 +24,8 @@ bool DatabaseManager::initializeDatabase(){
     // Database init
     DatabaseConnection& dbInstance = DatabaseConnection::getInstance();
     QSqlDatabase db = dbInstance.getConnection();
+    // here to init the database
+    // createdb();
     return true;
 }
 
