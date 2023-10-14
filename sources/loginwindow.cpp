@@ -43,11 +43,28 @@ LoginWindow::LoginWindow(QWidget *parent) :
         }
     });
 
+
+
 }
 
 LoginWindow::~LoginWindow()
 {
     delete LoginUi;
+}
+
+// Detects the arrow keys to change focus within the LoginUi
+void LoginWindow::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Up) {
+        //if Password as focus then focus on Username
+        if (LoginUi->Password->hasFocus()) {
+            LoginUi->Username->setFocus();
+        }
+    } else if (event->key() == Qt::Key_Down) {
+        //if Username has focus then focus on Password
+        if (LoginUi->Username->hasFocus()) {
+            LoginUi->Password->setFocus();
+        }
+    }
 }
 
 void setRedBorder(QLineEdit* lineEdit) {
