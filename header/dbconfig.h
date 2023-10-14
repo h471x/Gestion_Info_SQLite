@@ -21,6 +21,7 @@ public:
     void initTables();
     void initValues();
     void createdb();
+    void toggleBtn();
     QSqlTableModel* createUserTableModel(QTableWidget* tableWidget);
 
 private:
