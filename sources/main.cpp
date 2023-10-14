@@ -6,9 +6,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-//    LoginWindow login;
-//    login.show();
-    MainWindow w;
-    w.showMaximized();
+    LoginWindow login;
+    login.show();
+//    MainWindow w;
+//    w.showMaximized();
     return a.exec();
 }
