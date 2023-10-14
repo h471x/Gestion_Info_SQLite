@@ -43,15 +43,13 @@ void DatabaseManager::initValues(){
     query.exec();
 
     for(int i = 0; i < 20; i++){
+        // Get the current date
+        QDate currentDate = QDate::currentDate();
         query.prepare("INSERT OR IGNORE INTO MATERIEL(IdMateriel, NomMateriel, Marque, Etat, DEnregistrement, IdCategorie) VALUES(:idmat, :nomat, :marque, :etat, :date, :id)");
         query.bindValue(":idmat", i);
         query.bindValue(":nomat", "DELL INSPIRON");
         query.bindValue(":marque", "DELL");
         query.bindValue(":etat", "3");
-
-        // Get the current date
-        QDate currentDate = QDate::currentDate();
-
         query.bindValue(":date", currentDate);
         query.bindValue(":id", i);
         query.exec();
@@ -122,11 +120,13 @@ QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget)
     // Add The Actions columns within the table widget
     tableWidget->setColumnCount(tableColumnCount + 1);
     tableWidget->setHorizontalHeaderItem(tableColumnCount, new QTableWidgetItem("Actions"));
+    // Active les couleurs alternatives pour les lignes
+    tableWidget->setAlternatingRowColors(true);
 
-    // Add the Button Edit & Delete for Each Row
-    for (int row = 0; row < tableRowCount; ++row) {
-        QPushButton* editBtn = new QPushButton;
-        QPushButton* deleteBtn = new QPushButton;
+    // Parcourt toutes les lignes de la table
+    for (int row = 0; row < tableWidget->rowCount(); ++row) {
+        QPushButton* editBtn = new QPushButton(" Edit");
+        QPushButton* deleteBtn = new QPushButton(" Delete");
 
         // Experimental : show the data of the current row by clicking on Edit
         connect(editBtn, &QPushButton::clicked, this, [tableWidget, row]() {
@@ -155,17 +155,26 @@ QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget)
         editBtn->setFocusPolicy(Qt::NoFocus);
         deleteBtn->setFocusPolicy(Qt::NoFocus);
 
-        // Buttons Layout container
-        QHBoxLayout* actionsLayout = new QHBoxLayout;
+        QFont actionFont;
+        actionFont.setPointSize(9);
+        editBtn->setFont(actionFont);
+        deleteBtn->setFont(actionFont);
+        // Crée un widget pour le layout des boutons
+        QWidget* actionsWidget = new QWidget();
+        QHBoxLayout* actionsLayout = new QHBoxLayout(actionsWidget);
         actionsLayout->addWidget(editBtn);
         actionsLayout->addWidget(deleteBtn);
-
-        // Buttons widget container
-        QWidget* actionsWidget = new QWidget;
+        actionsLayout->setContentsMargins(0, 0, 0, 0);
         actionsWidget->setLayout(actionsLayout);
-
-        // Add the Button to the table widget
+        // Ajoute le widget de layout des boutons à chaque cellule de la colonne d'actions
         tableWidget->setCellWidget(row, tableColumnCount, actionsWidget);
+
+        // Applique les couleurs alternatives aux lignes de la colonne d'actions
+        if (row % 2 == 0) {
+            tableWidget->cellWidget(row, tableColumnCount)->setStyleSheet("background-color: #c5cad6;");
+        } else {
+            tableWidget->cellWidget(row, tableColumnCount)->setStyleSheet("background-color: #a2a6ae;");
+        }
 
         // Add delete button
         QTableWidgetItem* deleteItem = new QTableWidgetItem("Delete");
@@ -174,6 +183,9 @@ QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget)
         //Define the Row Height here in order to make the edit & delete icon fit inside
         tableWidget->setRowHeight(row, 60);
     }
+
+
+//    }
 
     for (int column = 0; column < tableColumnCount; ++column) {
         int selectedColumn = selectedColumns[column];
