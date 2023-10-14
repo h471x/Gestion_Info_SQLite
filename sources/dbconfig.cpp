@@ -76,8 +76,7 @@ void DatabaseManager::pragma(){
 //    }
 }
 
-QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget)
-{
+QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget){
     QSqlTableModel* model = new QSqlTableModel(tableWidget, mydb);
     model->setTable("MATERIEL");
 
