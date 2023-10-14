@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect the button click signal to the themeSwitcher slot
     connect(Mainui->LightBtn, &QPushButton::clicked, themeSwitcher, &ThemeSwitcher::toggleTheme);
-//    connect(Mainui->LightBtn, &QPushButton::clicked, &DatabaseManager::toggleBtn);
 
     // Create an instance of DatabaseManager to handle database operations
     DatabaseManager* dbManager = new DatabaseManager(this);
@@ -28,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
         // Create the user table model and use it with your QTableWidget
         // Insert the data PRODUCT in Mainui->tableWidget
         dbManager->createUserTableModel(Mainui->tableWidget);
+        dbManager->createUserTableModel(Mainui->findWidget);
     } else {
         // Handle the case where database initialization fails
         return;
