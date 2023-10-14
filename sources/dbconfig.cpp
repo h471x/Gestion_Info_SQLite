@@ -3,6 +3,9 @@
 #include <QCoreApplication>
 #include <QHeaderView>
 #include <QTableWidgetItem>
+#include <QHBoxLayout>
+#include "ui_mainwindow.h"
+#include <QDialog>
 
 DatabaseManager::DatabaseManager(QObject* parent)
     : QObject(parent){
@@ -41,18 +44,21 @@ void DatabaseManager::initValues(){
     query.bindValue(":nbre", 10);
     query.exec();
 
-    query.prepare("INSERT OR IGNORE INTO MATERIEL(IdMateriel, NomMateriel, Marque, Etat, DEnregistrement, IdCategorie) VALUES(:idmat, :nomat, :marque, :etat, :date, :id)");
-    query.bindValue(":idmat", 1);
-    query.bindValue(":nomat", "DELL INSPIRON");
-    query.bindValue(":marque", "DELL");
-    query.bindValue(":etat", "3");
+    for(int i = 0; i < 20; i++){
+        query.prepare("INSERT OR IGNORE INTO MATERIEL(IdMateriel, NomMateriel, Marque, Etat, DEnregistrement, IdCategorie) VALUES(:idmat, :nomat, :marque, :etat, :date, :id)");
+        query.bindValue(":idmat", i);
+        query.bindValue(":nomat", "DELL INSPIRON");
+        query.bindValue(":marque", "DELL");
+        query.bindValue(":etat", "3");
 
-    // Get the current date
-    QDate currentDate = QDate::currentDate();
+        // Get the current date
+        QDate currentDate = QDate::currentDate();
 
-    query.bindValue(":date", currentDate);
-    query.bindValue(":id", 1);
-    query.exec();
+        query.bindValue(":date", currentDate);
+        query.bindValue(":id", i);
+        query.exec();
+    }
+
 }
 
 void DatabaseManager::createdb(){
@@ -85,6 +91,22 @@ void DatabaseManager::pragma(){
 //    }
 }
 
+void DatabaseManager::toggleBtn(){
+//    bool isDark = false;
+//    if (isDark) {
+//        // Change l'icône du bouton "editBtn" pour la version sombre
+//        editBtn->setIcon(QIcon(":/darkicon/icons/dark/edit-2.svg"));
+
+//        // Change le tooltip du bouton "editBtn" pour la version sombre
+//        editBtn->setToolTip("Edit (Dark Mode)");
+//        isDark = true;
+//    }else if(!isDark){
+
+//        isDark = false;
+//    }
+    return;
+}
+
 QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget){
     QSqlTableModel* model = new QSqlTableModel(tableWidget, mydb);
     model->setTable("MATERIEL");
@@ -99,6 +121,7 @@ QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget)
 //    int tableColumnCount = model->columnCount();
     int tableColumnCount = selectedColumns.size();
     tableWidget->setColumnCount(tableColumnCount);
+    tableWidget->setAlternatingRowColors(true);
 
     for (int column = 0; column < tableColumnCount; ++column) {
         QTableWidgetItem* headerItem = new QTableWidgetItem(model->headerData(column, Qt::Horizontal).toString());
@@ -130,6 +153,90 @@ QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget)
 //            }
 //        }
 //    }
+
+    // Ajoute une colonne "Actions" au tableau
+    tableWidget->setColumnCount(tableColumnCount + 1);
+    tableWidget->setHorizontalHeaderItem(tableColumnCount, new QTableWidgetItem("Actions"));
+
+    for (int row = 0; row < tableRowCount; ++row) {
+        // Crée les boutons "Add" et "Delete" pour chaque ligne
+        QPushButton* editBtn = new QPushButton;
+        QPushButton* deleteBtn = new QPushButton;
+
+        // Connexion du signal "clicked" du bouton à une fonction lambda
+//         connect(editBtn, &QPushButton::clicked, [row]() {
+//               // Afficher le numéro de ligne
+//               qDebug() << "Clicked on row" << row+1;
+//         });
+
+        connect(editBtn, &QPushButton::clicked, this, [tableWidget, row]() {
+            // Accéder aux données de la ligne
+            QString id = tableWidget->item(row, 0)->data(Qt::DisplayRole).toString();
+            QString nom = tableWidget->item(row, 1)->data(Qt::DisplayRole).toString();
+            // Afficher les données dans QDebug
+            qDebug() << "Data of row" << row+1 << ": Id=" << id << " , NomMateriel=" << nom;
+        });
+
+        // Définit les tooltips
+        editBtn->setToolTip("Edit");
+        deleteBtn->setToolTip("Delete");
+
+        // Définit le style du tooltip
+        editBtn->setStyleSheet("QToolTip{background-color: #eaeff5;}");
+        deleteBtn->setStyleSheet("QToolTip{background-color: #eaeff5;}");
+
+//        // Vérifie la valeur actuelle de isDark
+//        if(isDark){
+//            // Change l'icône du bouton "editBtn" pour la version sombre
+//            editBtn->setIcon(QIcon(":/darkicon/icons/dark/edit-2.svg"));
+
+//            // Change le tooltip du bouton "editBtn" pour la version sombre
+//            editBtn->setToolTip("Edit (Dark Mode)");
+//        } else {
+//            // Change l'icône du bouton "editBtn" pour la version claire
+//            editBtn->setIcon(QIcon(":/lighticon/icons/light/edit-2.svg"));
+
+//            // Change le tooltip du bouton "editBtn" pour la version claire
+//            editBtn->setToolTip("Edit");
+//        }
+
+        // Charge l'icône à partir du fichier resources.qrc
+        editBtn->setIcon(QIcon(":/darkicon/icons/dark/edit-2.svg"));
+        // Définit la taille de l'icône si nécessaire
+        editBtn->setIconSize(QSize(30, 30));
+
+        // Charge l'icône à partir du fichier resources.qrc
+        deleteBtn->setIcon(QIcon(":/darkicon/icons/dark/trash.448x512.png"));
+        // Définit la taille de l'icône si nécessaire
+        deleteBtn->setIconSize(QSize(30, 30));
+
+        editBtn->setFocusPolicy(Qt::NoFocus);
+        deleteBtn->setFocusPolicy(Qt::NoFocus);
+
+        // Crée un layout horizontal pour les boutons
+        QHBoxLayout* actionsLayout = new QHBoxLayout;
+        actionsLayout->addWidget(editBtn);
+        actionsLayout->addWidget(deleteBtn);
+
+        // Crée un widget pour contenir le layout
+        QWidget* actionsWidget = new QWidget;
+        actionsWidget->setLayout(actionsLayout);
+
+        // Ajoute le widget au tableau
+        tableWidget->setCellWidget(row, tableColumnCount, actionsWidget);
+
+        // Utilise setItem pour le deuxième bouton "Delete"
+        QTableWidgetItem* deleteItem = new QTableWidgetItem("Delete");
+        tableWidget->setItem(row, tableColumnCount, deleteItem);
+
+        // Personnalise les boutons si besoin
+        // ...
+
+        // Tu peux ajouter des slots (fonctions) aux boutons plus tard si tu souhaites
+        // ...
+
+        tableWidget->setRowHeight(row, 60);
+    }
 
     for (int column = 0; column < tableColumnCount; ++column) {
         int selectedColumn = selectedColumns[column];
