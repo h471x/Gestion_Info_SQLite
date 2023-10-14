@@ -17,6 +17,9 @@ public:
     ~DatabaseManager();
 
     bool initializeDatabase();
+    void pragma();
+    void initTables();
+    void initValues();
     void createdb();
     QSqlTableModel* createUserTableModel(QTableWidget* tableWidget);
 
