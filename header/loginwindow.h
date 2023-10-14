@@ -25,6 +25,7 @@ private slots:
 private:
     Ui::LoginWindow *LoginUi;
     QSqlDatabase mydbadmin;
+    void keyPressEvent(QKeyEvent *event) override;
 };
 
 #endif // LOGINWINDOW_H
