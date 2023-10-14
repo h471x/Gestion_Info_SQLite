@@ -68,6 +68,10 @@ void LoginWindow::on_LoginBtn_clicked()
     DatabaseConnection& dbInstance = DatabaseConnection::getInstance();
     QSqlDatabase db = dbInstance.getConnection();
 
+    // Call the database creation here
+    DatabaseManager* dbm = new DatabaseManager(this);
+    dbm->createdb();
+
     QString username = LoginUi->Username->text();
     QString password = LoginUi->Password->text();
 
@@ -75,6 +79,14 @@ void LoginWindow::on_LoginBtn_clicked()
     QString hashedPassword = password;
 
     QSqlQuery query;
+
+    query.prepare("INSERT OR IGNORE INTO ADMIN(UsernameAdmin, Password, NomAdmin, TelephoneAdmin, AdresseAdmin) VALUES(:usernameadmin, :passwordadmin, :nameadmin, :phone, :adresse)");
+    query.bindValue(":usernameadmin", "admin");
+    query.bindValue(":passwordadmin", "admin");
+    query.bindValue("nameadmin", "admin");
+    query.bindValue(":phone", "033333333");
+    query.bindValue(":adresse", "Fianarantsoa");
+    query.exec();
 
     // Use placeholders in the query
     query.prepare("SELECT * FROM ADMIN WHERE UsernameAdmin = :username AND Password = :password");
