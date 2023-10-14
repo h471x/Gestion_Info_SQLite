@@ -77,7 +77,7 @@ void LoginWindow::on_LoginBtn_clicked()
     QSqlQuery query;
 
     // Use placeholders in the query
-    query.prepare("SELECT * FROM ADMIN WHERE Username = :username AND Password = :password");
+    query.prepare("SELECT * FROM ADMIN WHERE UsernameAdmin = :username AND Password = :password");
     query.bindValue(":username", username);
     query.bindValue(":password", hashedPassword);
 
