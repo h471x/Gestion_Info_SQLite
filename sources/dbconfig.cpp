@@ -6,14 +6,32 @@
 #include <QHBoxLayout>
 #include "ui_mainwindow.h"
 #include <QDialog>
+#include <QApplication>
 
 DatabaseManager::DatabaseManager(QObject* parent)
     : QObject(parent){
 }
 
+DatabaseManager::DatabaseManager(Ui::MainWindow* ui)
+    : ui(ui), isDarkIcon(false)
+{
+}
+
 DatabaseManager::~DatabaseManager(){
     if (mydb.isOpen()) {
         mydb.close();
+    }
+}
+
+void DatabaseManager::changeIcon(){
+    if(isDarkIcon){
+        editBtn->setIcon(QIcon(":/darkicon/icons/dark/edit-2.svg"));
+        deleteBtn->setIcon(QIcon(":/darkicon/icons/dark/trash.448x512.png"));
+        isDarkIcon = false;
+    }else if(!isDarkIcon){
+        editBtn->setIcon(QIcon(":/darkicon/icons/dark/edit-2.svg"));
+        deleteBtn->setIcon(QIcon(":/darkicon/icons/dark/trash.448x512.png"));
+        isDarkIcon = true;
     }
 }
 
@@ -125,8 +143,8 @@ QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget)
 
     // Parcourt toutes les lignes de la table
     for (int row = 0; row < tableWidget->rowCount(); ++row) {
-        QPushButton* editBtn = new QPushButton(" Edit");
-        QPushButton* deleteBtn = new QPushButton(" Delete");
+        editBtn = new QPushButton(" Edit");
+        deleteBtn = new QPushButton(" Delete");
 
         // Experimental : show the data of the current row by clicking on Edit
         connect(editBtn, &QPushButton::clicked, this, [tableWidget, row]() {
