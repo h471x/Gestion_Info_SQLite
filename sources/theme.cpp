@@ -13,8 +13,8 @@ void ThemeSwitcher::toggleTheme()
         ui->LightBtn->setIcon(QIcon(":/darkicon/icons/dark/toggle-off.512x342.png"));
         ui->Body->setStyleSheet("background-color: #c5cad6; color: black;");
         ui->Menu->setStyleSheet("background-color: #eaeff5; color: black;");
+        ui->Content->setStyleSheet("QTableWidget::item{color: #000;}QHeaderView::section{background-color: #a2a6ae;border-radius:3px;}QTableWidget::item{background-color: #c5cad6;}QTableWidget::item:Alternate{background-color: #a2a6ae;}#Content QTableWidget::item:Hover{background-color: #eaeff5;}");
         ui->SubMenu->setStyleSheet("QPushButton:Hover{background: #d4d8e2;}QPushButton:Focus{background: #c5cad6; color: black; border-left: 8px solid #202020;}");
-        ui->Content->setStyleSheet("QTableWidget::item{color: #000;}QHeaderView::section{background-color: #a2a6ae;border-radius:3px;}QTableWidget::item:Hover{background-color: #eaeff5;}QTableWidget::item:Alternate{background-color: #a2a6ae;}");
 
         //change icons
         ui->HomeBtn->setIcon(QIcon(":/darkicon/icons/dark/estate.461x512.png"));
