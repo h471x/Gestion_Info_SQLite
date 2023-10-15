@@ -15,8 +15,13 @@ MainWindow::MainWindow(QWidget *parent)
     // theme switcher object
     ThemeSwitcher* themeSwitcher = new ThemeSwitcher(Mainui);
 
+//    // theme switcher object
+//    DatabaseManager* icon = new DatabaseManager(Mainui);
+
     // Connect the button click signal to the themeSwitcher slot
     connect(Mainui->LightBtn, &QPushButton::clicked, themeSwitcher, &ThemeSwitcher::toggleTheme);
+
+//    connect(Mainui->LightBtn_2, &QPushButton::clicked, icon, &DatabaseManager::changeIcon);
 
     // Create an instance of DatabaseManager to handle database operations
     DatabaseManager* dbManager = new DatabaseManager(this);
