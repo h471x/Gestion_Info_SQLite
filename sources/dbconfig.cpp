@@ -37,11 +37,28 @@ void DatabaseManager::changeIcon(){
 
 void DatabaseManager::initTables(){
     QSqlQuery query;
+
+    //Category table
     query.exec("CREATE TABLE IF NOT EXISTS CATEGORIE (IdCategorie INTEGER NOT NULL ,NomCategorie TEXT NOT NULL ,NbeMateriel INTEGER NOT NULL DEFAULT 0 ,PRIMARY KEY(IdCategorie));");
+
+    //Provider table
     query.exec("CREATE TABLE IF NOT EXISTS FOURNISSEUR (NomFournisseur TEXT NOT NULL ,PRIMARY KEY(NomFournisseur));");
+
+    //Admin table
     query.exec("CREATE TABLE IF NOT EXISTS ADMIN (UsernameAdmin TEXT NOT NULL UNIQUE ,Password TEXT NOT NULL ,NomAdmin TEXT NOT NULL ,PrenomAdmin TEXT NOT NULL ,TelephoneAdmin TEXT NOT NULL ,AdresseAdmin TEXT NOT NULL ,PRIMARY KEY(UsernameAdmin));");
+
+    //User table
     query.exec("CREATE TABLE IF NOT EXISTS UTILISATEUR (IdUtilisateur  INTEGER NOT NULL ,NomUtilisateur TEXT NOT NULL ,PrenomUtilisateur TEXT ,AdresseUtilisateur TEXT  NOT NULL ,TelephoneUtilisateur TEXT NOT NULL,PRIMARY KEY(IdUtilisateur));");
-    query.exec("CREATE TABLE IF NOT EXISTS MATERIEL (IdMateriel INTEGER NOT NULL, NomMateriel TEXT NOT NULL, Marque TEXT NOT NULL, Etat TEXT NOT NULL, DEnregistrement TEXT NOT NULL, IdCategorie INTEGER NOT NULL, NomFournisseur TEXT, UsernameAdmin TEXT, IdUtilisateur INTEGER, PRIMARY KEY(IdMateriel), FOREIGN KEY(IdCategorie) REFERENCES CATEGORIE(IdCategorie) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY(NomFournisseur) REFERENCES FOURNISSEUR(NomFournisseur) ON UPDATE SET NULL ON DELETE SET NULL, FOREIGN KEY(UsernameAdmin) REFERENCES ADMIN(UsernameAdmin) ON UPDATE CASCADE ON DELETE SET NULL, FOREIGN KEY(IdUtilisateur) REFERENCES UTILISATEUR(IdUtilisateur) ON UPDATE SET NULL ON DELETE SET NULL);");
+
+    //Product table
+    query.exec("CREATE TABLE IF NOT EXISTS MATERIEL (IdMateriel TEXT NOT NULL, NomMateriel TEXT NOT NULL, Marque TEXT NOT NULL, Etat TEXT NOT NULL, DEnregistrement TEXT NOT NULL, IdCategorie INTEGER NOT NULL, NomFournisseur TEXT, UsernameAdmin TEXT, IdUtilisateur INTEGER, PRIMARY KEY(IdMateriel), FOREIGN KEY(IdCategorie) REFERENCES CATEGORIE(IdCategorie) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY(NomFournisseur) REFERENCES FOURNISSEUR(NomFournisseur) ON UPDATE SET NULL ON DELETE SET NULL, FOREIGN KEY(UsernameAdmin) REFERENCES ADMIN(UsernameAdmin) ON UPDATE CASCADE ON DELETE SET NULL, FOREIGN KEY(IdUtilisateur) REFERENCES UTILISATEUR(IdUtilisateur) ON UPDATE SET NULL ON DELETE SET NULL);");
+
+    //Increment trigger
+    query.exec("CREATE TRIGGER trigger_increment_materiel AFTER INSERT ON MATERIEL WHEN new.IdCategorie = (SELECT IdCategorie FROM CATEGORIE WHERE CATEGORIE.IdCategorie = new.IdCategorie) BEGIN UPDATE CATEGORIE SET NbeMateriel=NbeMateriel+1; END;");
+
+    //Decrement trigger
+    query.exec(" CREATE TRIGGER trigger_decrement_nbe_materiel AFTER DELETE ON MATERIEL WHEN old.IdCategorie =(SELECT IdCategorie FROM CATEGORIE WHERE CATEGORIE.IdCategorie = old.IdCategorie) BEGIN UPDATE CATEGORIE SET NbeMateriel = NbeMateriel -1; END;");
+
 }
 
 void DatabaseManager::initValues(){
@@ -55,23 +72,50 @@ void DatabaseManager::initValues(){
     query.bindValue(":adresse", "Fianarantsoa");
     query.exec();
 
-    query.prepare("INSERT INTO CATEGORIE(NomCategorie, NbeMateriel) VALUES(:nom, :nbre)");
+    query.prepare("INSERT INTO CATEGORIE(IdCategorie, NomCategorie) VALUES(:idcat, :nom)");
+    query.bindValue(":idcat", 1);
     query.bindValue(":nom", "ORDINATEUR");
-    query.bindValue(":nbre", 10);
     query.exec();
 
-    for(int i = 0; i < 20; i++){
+//    for(int i = 0; i < 20; i++){
         // Get the current date
         QDate currentDate = QDate::currentDate();
         query.prepare("INSERT OR IGNORE INTO MATERIEL(IdMateriel, NomMateriel, Marque, Etat, DEnregistrement, IdCategorie) VALUES(:idmat, :nomat, :marque, :etat, :date, :id)");
-        query.bindValue(":idmat", i);
+        query.bindValue(":idmat", 1);
         query.bindValue(":nomat", "DELL INSPIRON");
         query.bindValue(":marque", "DELL");
         query.bindValue(":etat", "3");
         query.bindValue(":date", currentDate);
-        query.bindValue(":id", i);
+        query.bindValue(":id", 1);
         query.exec();
-    }
+
+        query.prepare("INSERT OR IGNORE INTO MATERIEL(IdMateriel, NomMateriel, Marque, Etat, DEnregistrement, IdCategorie) VALUES(:idmat, :nomat, :marque, :etat, :date, :id)");
+        query.bindValue(":idmat", 2);
+        query.bindValue(":nomat", "HP");
+        query.bindValue(":marque", "Hewlett Packyard");
+        query.bindValue(":etat", "5");
+        query.bindValue(":date", currentDate);
+        query.bindValue(":id", 1);
+        query.exec();
+
+        query.prepare("INSERT OR IGNORE INTO MATERIEL(IdMateriel, NomMateriel, Marque, Etat, DEnregistrement, IdCategorie) VALUES(:idmat, :nomat, :marque, :etat, :date, :id)");
+        query.bindValue(":idmat", 3);
+        query.bindValue(":nomat", "Vivobook");
+        query.bindValue(":marque", "ASUS");
+        query.bindValue(":etat", "2");
+        query.bindValue(":date", currentDate);
+        query.bindValue(":id", 1);
+        query.exec();
+
+        query.prepare("INSERT OR IGNORE INTO MATERIEL(IdMateriel, NomMateriel, Marque, Etat, DEnregistrement, IdCategorie) VALUES(:idmat, :nomat, :marque, :etat, :date, :id)");
+        query.bindValue(":idmat", 4);
+        query.bindValue(":nomat", "IBM");
+        query.bindValue(":marque", "Microsoft");
+        query.bindValue(":etat", "3");
+        query.bindValue(":date", currentDate);
+        query.bindValue(":id", 1);
+        query.exec();
+//    }
 
 }
 
@@ -143,15 +187,19 @@ QSqlTableModel* DatabaseManager::createUserTableModel(QTableWidget* tableWidget)
 
     // Parcourt toutes les lignes de la table
     for (int row = 0; row < tableWidget->rowCount(); ++row) {
+
         editBtn = new QPushButton(" Edit");
         deleteBtn = new QPushButton(" Delete");
 
-        // Experimental : show the data of the current row by clicking on Edit
-        connect(editBtn, &QPushButton::clicked, this, [tableWidget, row]() {
+        connect(deleteBtn, &QPushButton::clicked, this, [tableWidget, row]() {
+            QSqlQuery query;
             QString id = tableWidget->item(row, 0)->data(Qt::DisplayRole).toString();
-            QString nom = tableWidget->item(row, 1)->data(Qt::DisplayRole).toString();
-            qDebug() << "Data of row" << row+1 << ": Id=" << id << " , NomMateriel=" << nom;
+            query.prepare("DELETE FROM MATERIEL WHERE IdMateriel=:id");
+            query.bindValue(":id", id);
+            query.exec();
+            tableWidget->removeRow(row);
         });
+
 
         // Some adjustemts for the buttons
 
