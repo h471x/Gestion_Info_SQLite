@@ -14,8 +14,7 @@ void ThemeSwitcher::toggleTheme()
         ui->Body->setStyleSheet("background-color: #c5cad6; color: black;");
         ui->Menu->setStyleSheet("background-color: #eaeff5; color: black;");
         ui->SubMenu->setStyleSheet("QPushButton:Hover{background: #d4d8e2;}QPushButton:Focus{background: #c5cad6; color: black; border-left: 8px solid #202020;}");
-        ui->Content->setStyleSheet("QTableWidget::item{color: #000;}QHeaderView::section{background-color: #a2a6ae;border-radius:3px;}QTableWidget::item{background-color: #c5cad6;}QTableWidget::item:Alternate{background-color: #a2a6ae;}");
-        //QTableWidget::item:Hover{background-color: #d4d8e2;}
+        ui->Content->setStyleSheet("QTableWidget::item{color: #000;}QHeaderView::section{background-color: #a2a6ae;border-radius:3px;}QTableWidget::item:Hover{background-color: #eaeff5;}QTableWidget::item:Alternate{background-color: #a2a6ae;}");
 
         //change icons
         ui->HomeBtn->setIcon(QIcon(":/darkicon/icons/dark/estate.461x512.png"));
@@ -50,7 +49,6 @@ void ThemeSwitcher::toggleTheme()
         ui->Menu->setStyleSheet("background-color: #000; color: white;");
         ui->Content->setStyleSheet("QTableWidget::item{color: #fff;}QHeaderView::section{background-color: #1f1f1f;border-radius:3px;}QTableWidget::item{background-color: #272727;}QTableWidget::item:Alternate{background-color: #1f1f1f;}#Content QTableWidget::item:Hover{background-color: #000;}");
         ui->SubMenu->setStyleSheet("QPushButton:Hover{background: #202020;}QPushButton:Focus{background: #272727;color: white; border-left: 8px solid white;}");
-
         //change icon
         ui->HomeBtn->setIcon(QIcon(":/icons/icons/estate.461x512.png"));
         ui->MenuBtn->setIcon(QIcon(":/icons/icons/menu.svg"));
