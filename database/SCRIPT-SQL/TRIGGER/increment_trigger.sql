@@ -1,7 +1,0 @@
-CREATE TRIGGER trigger_nbe_materiel
-AFTER INSERT ON MATERIEL
-BEGIN
-UPDATE CATEGORIE
-SET NbeMateriel = NbeMateriel + 1
-WHERE CATEGORIE.IdCategorie=MATERIEL.IdCategorie;
-END;
